@@ -55,8 +55,8 @@ def move_result(bot_move, move_properties):
     return (bot_move() if player == 'cpu'
             else input(f'{player}, сделайте ход. Формат "буквацифра", например "a1".'))
 
-if __name__ == '__main__':
 
+def game_preparations(my_board):
     print('Добро пожаловать в игру "Крестики-нолики"!')
 
     player_name = input('Игрок, введите имя\n')
@@ -76,6 +76,13 @@ if __name__ == '__main__':
         players_symbols = {'cpu': 'x', player_name: 'o'}
 
     my_cycle = cycle(players_symbols.items())
+    
+    return new_board, my_cycle
+
+
+if __name__ == '__main__':
+
+    new_board, my_cycle = game_preparations(my_board)
 
     end_game = False
  
