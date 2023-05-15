@@ -80,7 +80,7 @@ def game_preparations(my_board):
     return new_board, my_cycle
 
 
-if __name__ == '__main__':
+def play_tic_tac_toe():
 
     new_board, my_cycle = game_preparations(my_board)
 
@@ -112,4 +112,5 @@ if __name__ == '__main__':
     else:
         print(f"Конец игры. Победил {player}" if end_game else "Ничья.")
 
-
+if __name__ == "__main__":
+    play_tic_tac_toe()
