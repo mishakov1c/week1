@@ -10,13 +10,14 @@ class MoveResult():
         self.is_draw = is_draw
 
 
-def bot_move():
+def bot_move() -> str:
     position = f'{randint(0, COLUMNS - 1)}{randint(0, ROWS - 1)}'
     print(f'cpu делает ход {position}')
+    
     return position
 
 
-def players_move(player):
+def players_move(player: str) -> str:
     move = input(f'{player}, сделайте ход.\n')
     while move_is_not_correct(move):
         move = input(f'{player}, сделайте корректный ход (2 цифры).\n')    
@@ -24,26 +25,26 @@ def players_move(player):
     return move
 
 
-def move_is_not_correct(move):
+def move_is_not_correct(move: str) -> bool:
     return ((len(move) != 2) or (not move.isnumeric())
         or (int(move[0]) > (ROWS - 1) or int(move[1]) > (COLUMNS - 1)))
 
 
-def make_move(gameboard, queue, player, endgame, is_draw):
+def make_move(gameboard: list, queue: dict[str, str], player_name: str, is_endgame: bool, is_draw: bool) -> MoveResult:
     for k, v in queue.items():
-        position = move_position(player, v)
+        column, row = move_position(player_name, v)
         
-        while gameboard[position] != EMPTY_BLOCK:
-            print(f'Клетка {position} занята, выберите другую.')
-            position = move_position(player, v)
+        while gameboard[column][row] != EMPTY_BLOCK:
+            print(f'Клетка {column}{row} занята, выберите другую.')
+            column, row = move_position(player_name, v)
         
-        gameboard[position] = k
+        gameboard[column][row] = k
         
         print_board(gameboard)
             
-        endgame = check_endgame(gameboard)
+        is_endgame = check_endgame(gameboard)
 
-        if endgame:
+        if is_endgame:
             winner = queue[k]
             print(f'Победил {winner}')
             break
@@ -54,14 +55,16 @@ def make_move(gameboard, queue, player, endgame, is_draw):
             print('Ничья')
             break
 
-    return MoveResult(endgame=endgame, is_draw=is_draw)
+    return MoveResult(endgame=is_endgame, is_draw=is_draw)
  
 
-def move_position(player, v):
-    return players_move(v) if v == player else bot_move()
+def move_position(player_name: str, current_player: str) -> tuple[int, int]:
+    raw_position = players_move(current_player) if current_player == player_name else bot_move()
+    position = (int(raw_position[0]), int(raw_position[1]))
+    return position
 
 
-def queue_of_players(player_name, cpu_name):
+def queue_of_players(player_name: str, cpu_name: str) -> dict:
     player_plays_first = randint(0, 1)
     
     if player_plays_first:

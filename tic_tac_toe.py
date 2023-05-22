@@ -13,16 +13,13 @@ def play_game():
     gameboard = board()
     print_board(gameboard)
     
-    endgame = False
+    is_endgame = False
     is_draw = False
 
-    while not endgame and not is_draw:
-        move_result = make_move(gameboard, queue, player_name, endgame, is_draw)
-        endgame = move_result.endgame
+    while not is_endgame and not is_draw:
+        move_result = make_move(gameboard, queue, player_name, is_endgame, is_draw)
+        is_endgame = move_result.endgame
         is_draw = move_result.is_draw
 
 if __name__ == '__main__':
     play_game()
-
-
-               

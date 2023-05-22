@@ -1,21 +1,20 @@
 from config import COLUMNS, ROWS, EMPTY_BLOCK
 
 
-def board():
-    board = {}
+def board() -> list:
+    board = []
 
-    for row in range(ROWS):
-        for column in range(COLUMNS):
-            position = f'{column}{row}'
-            board[position] = EMPTY_BLOCK
+    for _ in range(ROWS):
+        row = [EMPTY_BLOCK] * COLUMNS
+        board.append(row)
 
     return board
 
 
-def print_board(board):
+def print_board(board: list) -> None:
     for row in range(ROWS):
         for col in range(COLUMNS):
-            block_value = board[f'{col}{row}']
+            block_value = board[col][row]
             print(block_value, end=' ')
             if col < COLUMNS - 1:
                 print('|', end=' ')
