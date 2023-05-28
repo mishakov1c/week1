@@ -42,7 +42,7 @@ def make_move(gameboard: list, current_player: str, current_mark: str, is_endgam
     
     while gameboard[row][column] != EMPTY_BLOCK:
         print(f'Клетка {row}{column} занята, выберите другую.')
-        row, column = move_position(current_player, current_player)
+        row, column = move_position(current_player)
     
     gameboard[row][column] = current_mark
     
