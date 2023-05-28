@@ -1,4 +1,5 @@
 from board import board, print_board
+from constants import CPU_NAME
 from move import make_move, queue_of_players
 
 
@@ -6,9 +7,8 @@ def play_game():
     print('Добро пожаловать в игру "Крестики-нолики"!')
 
     player_name = input('Игрок, введите имя\n')
-    cpu_name = 'cpu'
 
-    queue = queue_of_players(player_name, cpu_name)
+    queue = queue_of_players(player_name, CPU_NAME)
 
     gameboard = board()
     print_board(gameboard)

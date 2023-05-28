@@ -1,7 +1,10 @@
+from random import randint
+
 from board import print_board
 from checkings import check_draw, check_endgame
-from config import COLUMNS, ROWS, EMPTY_BLOCK, O_MARK, X_MARK
-from random import randint
+from config import CELLS
+from constants import EMPTY_BLOCK, O_MARK, X_MARK
+from typing import Tuple, Union
 
 
 class MoveResult():
@@ -10,42 +13,47 @@ class MoveResult():
         self.is_draw = is_draw
 
 
-def bot_move() -> str:
-    position = f'{randint(0, COLUMNS - 1)}{randint(0, ROWS - 1)}'
+def bot_move() -> Tuple[int, int]:
+    position = (randint(0, CELLS - 1), randint(0, CELLS - 1))
+    while not move_is_correct(position):
+        position = (randint(0, CELLS - 1), randint(0, CELLS - 1))    
     print(f'cpu делает ход {position}')
     
     return position
 
 
-def players_move(player: str) -> str:
-    move = input(f'{player}, сделайте ход.\n')
-    while move_is_not_correct(move):
-        move = input(f'{player}, сделайте корректный ход (2 цифры).\n')    
+def players_move(player: str) -> Tuple[int, int]:
+    raw_move = input(f'{player}, сделайте ход.\n')
+
+    while not raw_move.isnumeric() and not move_is_correct(raw_move):
+        raw_move = input(f'{player}, сделайте корректный ход (2 цифры).\n')    
+
+    move = (int(raw_move[0]), int(raw_move[1]))
 
     return move
 
 
-def move_is_not_correct(move: str) -> bool:
-    return ((len(move) != 2) or (not move.isnumeric())
-        or (int(move[0]) > (ROWS - 1) or int(move[1]) > (COLUMNS - 1)))
+def move_is_correct(move: Union[str, Tuple[int, int]]) -> bool: 
+    return (len(move) == 2) and (int(move[0]) <= (CELLS - 1)
+        and int(move[1]) <= (CELLS - 1))
 
 
 def make_move(gameboard: list, queue: dict[str, str], player_name: str, is_endgame: bool, is_draw: bool) -> MoveResult:
-    for k, v in queue.items():
-        column, row = move_position(player_name, v)
+    for current_mark, current_player in queue.items():
+        row, column = move_position(player_name, current_player)
         
-        while gameboard[column][row] != EMPTY_BLOCK:
-            print(f'Клетка {column}{row} занята, выберите другую.')
-            column, row = move_position(player_name, v)
+        while gameboard[row][column] != EMPTY_BLOCK:
+            print(f'Клетка {row}{column} занята, выберите другую.')
+            row, column = move_position(player_name, current_player)
         
-        gameboard[column][row] = k
+        gameboard[row][column] = current_mark
         
         print_board(gameboard)
             
         is_endgame = check_endgame(gameboard)
 
         if is_endgame:
-            winner = queue[k]
+            winner = queue[current_mark]
             print(f'Победил {winner}')
             break
 
@@ -58,9 +66,8 @@ def make_move(gameboard: list, queue: dict[str, str], player_name: str, is_endga
     return MoveResult(endgame=is_endgame, is_draw=is_draw)
  
 
-def move_position(player_name: str, current_player: str) -> tuple[int, int]:
-    raw_position = players_move(current_player) if current_player == player_name else bot_move()
-    position = (int(raw_position[0]), int(raw_position[1]))
+def move_position(player_name: str, current_player: str) -> Tuple[int, int]:
+    position = players_move(current_player) if current_player == player_name else bot_move()
     return position
 
 

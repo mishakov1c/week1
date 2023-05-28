@@ -1,23 +1,23 @@
-from config import COLUMNS, ROWS, EMPTY_BLOCK
+from config import CELLS
+from constants import EMPTY_BLOCK
 
-
-def board() -> list:
+def board() -> list[list[str]]:
     board = []
 
-    for _ in range(ROWS):
-        row = [EMPTY_BLOCK] * COLUMNS
+    for _ in range(CELLS):
+        row = [EMPTY_BLOCK] * CELLS
         board.append(row)
 
     return board
 
 
 def print_board(board: list) -> None:
-    for row in range(ROWS):
-        for col in range(COLUMNS):
-            block_value = board[col][row]
+    for row in range(CELLS):
+        for col in range(CELLS):
+            block_value = board[row][col]
             print(block_value, end=' ')
-            if col < COLUMNS - 1:
+            if col < CELLS - 1:
                 print('|', end=' ')
         print()
-        if row < ROWS - 1:
-            print('- ' * (COLUMNS * 2 - 1))
+        if row < CELLS - 1:
+            print('- ' * (CELLS * 2 - 1))
