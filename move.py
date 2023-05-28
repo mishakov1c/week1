@@ -1,9 +1,8 @@
-from random import randint
-
 from board import print_board
 from checkings import check_draw, check_endgame
 from config import CELLS
-from constants import EMPTY_BLOCK, O_MARK, X_MARK
+from constants import EMPTY_BLOCK, CPU_NAME
+from random import randint
 from typing import Tuple, Union
 
 
@@ -38,46 +37,41 @@ def move_is_correct(move: Union[str, Tuple[int, int]]) -> bool:
         and int(move[1]) <= (CELLS - 1))
 
 
-def make_move(gameboard: list, queue: dict[str, str], player_name: str, is_endgame: bool, is_draw: bool) -> MoveResult:
-    for current_mark, current_player in queue.items():
-        row, column = move_position(player_name, current_player)
+def make_move(gameboard: list, current_player: str, current_mark: str, is_endgame: bool, is_draw: bool) -> MoveResult:
+    row, column = move_position(current_player)
+    
+    while gameboard[row][column] != EMPTY_BLOCK:
+        print(f'Клетка {row}{column} занята, выберите другую.')
+        row, column = move_position(current_player, current_player)
+    
+    gameboard[row][column] = current_mark
+    
+    print_board(gameboard)
         
-        while gameboard[row][column] != EMPTY_BLOCK:
-            print(f'Клетка {row}{column} занята, выберите другую.')
-            row, column = move_position(player_name, current_player)
-        
-        gameboard[row][column] = current_mark
-        
-        print_board(gameboard)
-            
-        is_endgame = check_endgame(gameboard)
+    is_endgame = check_endgame(gameboard)
 
-        if is_endgame:
-            winner = queue[current_mark]
-            print(f'Победил {winner}')
-            break
+    if is_endgame:
+        winner = current_player
+        print(f'Победил {winner}')
 
-        is_draw = check_draw(gameboard)
+    is_draw = check_draw(gameboard)
 
-        if is_draw:
-            print('Ничья')
-            break
+    if is_draw:
+        print('Ничья')
 
     return MoveResult(endgame=is_endgame, is_draw=is_draw)
  
 
-def move_position(player_name: str, current_player: str) -> Tuple[int, int]:
-    position = players_move(current_player) if current_player == player_name else bot_move()
+def move_position(current_player: str) -> Tuple[int, int]:
+    position = bot_move() if current_player == CPU_NAME else players_move(current_player)
     return position
 
 
-def queue_of_players(player_name: str, cpu_name: str) -> dict:
+def get_current_player(player_name):
     player_plays_first = randint(0, 1)
     
     if player_plays_first:
-        queue = {X_MARK: player_name, O_MARK: cpu_name}
+        current_player = player_name
     else:
-        queue = {X_MARK: cpu_name, O_MARK: player_name}
-
-    print(f'Первым ходит {queue[X_MARK]}.')
-    return queue
+        current_player = CPU_NAME
+    return current_player
