@@ -1,28 +1,29 @@
-from config import CELLS
-from constants import EMPTY_BLOCK 
+from config import NUM_OF_CELLS
+from enums import TicTacToeSymbol 
+
 
 def check_endgame(board: list) -> bool:
-    for row in range(CELLS):
-        if all(board[row][0] == board[row][col] != EMPTY_BLOCK for col in range(CELLS)):            
+    for row in range(NUM_OF_CELLS):
+        if all(board[row][0] == board[row][col] != TicTacToeSymbol.EMPTY.value for col in range(NUM_OF_CELLS)):            
             return True
         
-    for col in range(CELLS):
-        if all(board[0][col] == board[row][col] != EMPTY_BLOCK for row in range(CELLS)):
+    for col in range(NUM_OF_CELLS):
+        if all(board[0][col] == board[row][col] != TicTacToeSymbol.EMPTY.value for row in range(NUM_OF_CELLS)):
             return True
         
-    if all(board[0][0] == board[i][i] != EMPTY_BLOCK for i in range(CELLS)):
+    if all(board[0][0] == board[i][i] != TicTacToeSymbol.EMPTY.value for i in range(NUM_OF_CELLS)):
         return True
 
-    if all(board[CELLS - 1][0] == board[CELLS - i - 1][i] != EMPTY_BLOCK for i in range(CELLS)):
+    if all(board[NUM_OF_CELLS - 1][0] == board[NUM_OF_CELLS - i - 1][i] != TicTacToeSymbol.EMPTY.value for i in range(NUM_OF_CELLS)):
         return True
 
     return False  
 
 
 def check_draw(board: list) -> bool:
-    for row in range(CELLS):
-        for col in range(CELLS):
-            if board[row][col] == EMPTY_BLOCK:
+    for row in range(NUM_OF_CELLS):
+        for col in range(NUM_OF_CELLS):
+            if board[row][col] == TicTacToeSymbol.EMPTY.value:
                 return False
             
     return True

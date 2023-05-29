@@ -1,23 +1,18 @@
-from config import CELLS
-from constants import EMPTY_BLOCK
+from config import NUM_OF_CELLS
+from enums import TicTacToeSymbol
+
 
 def board() -> list[list[str]]:
-    board = []
-
-    for _ in range(CELLS):
-        row = [EMPTY_BLOCK] * CELLS
-        board.append(row)
-
-    return board
+    return [[TicTacToeSymbol.EMPTY.value] * NUM_OF_CELLS for _ in range(NUM_OF_CELLS)]
 
 
-def print_board(board: list) -> None:
-    for row in range(CELLS):
-        for col in range(CELLS):
-            block_value = board[row][col]
-            print(block_value, end=' ')
-            if col < CELLS - 1:
-                print('|', end=' ')
+
+def print_board(board: list[list[str]]) -> None:
+    for row in board:
+        for col, block_value in enumerate(row):
+            print(block_value, end=" ")
+            if col < NUM_OF_CELLS - 1:
+                print("|", end=" ")
         print()
-        if row < CELLS - 1:
-            print('- ' * (CELLS * 2 - 1))
+        if row is not board[-1]:
+            print("- " * (NUM_OF_CELLS * 2 - 1))
