@@ -1,7 +1,8 @@
 from board import board, print_board
 from constants import CPU_NAME
 from enums import TicTacToeSymbol
-from move import get_current_player, make_move
+from move import get_first_move_player, make_move
+from player import Player
 
 
 def play_game() -> None:
@@ -9,14 +10,17 @@ def play_game() -> None:
 
     player_name = input('Игрок, введите имя\n')
 
-    current_player = get_current_player(player_name)
-    current_mark = TicTacToeSymbol.X
+    human_player = Player(name=player_name)
+    cpu_player = Player(name=CPU_NAME)
 
-    print(f'Первым ходит {current_player}.')
+    current_player = get_first_move_player(human_player, cpu_player)
+    current_mark = TicTacToeSymbol.CROSS
+
+    print(f'Первым ходит {current_player.name}.')
 
     gameboard = board()
     print_board(gameboard)
-    
+
     is_endgame = False
     is_draw = False
 
@@ -24,8 +28,11 @@ def play_game() -> None:
         move_result = make_move(gameboard, current_player, current_mark, is_endgame, is_draw)
         is_endgame = move_result.is_endgame
         is_draw = move_result.is_draw
-        current_player = player_name if current_player == CPU_NAME else CPU_NAME
-        current_mark = TicTacToeSymbol.O if current_mark == TicTacToeSymbol.X else TicTacToeSymbol.X
+        current_player = human_player if current_player == cpu_player else cpu_player
+        current_mark = (
+            TicTacToeSymbol.NOUGHT if current_mark == TicTacToeSymbol.CROSS
+            else TicTacToeSymbol.CROSS
+        )
 
 
 if __name__ == '__main__':
